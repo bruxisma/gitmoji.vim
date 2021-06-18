@@ -1,0 +1,35 @@
+*gitmoji.txt* Gitmoji Plugin
+
+Homepage:       https://github.com/slurps-mad-rips/gitmoji.vim
+License:        MIT
+Version:        0.1.0
+Author:         Isabella Muerte
+
+===============================================================================
+Contents                                               *gitmoji* *gitmoji-contents*
+
+        1. Introduction .............................. |gitmoji-introduction|
+        2. Installation .............................. |gitmoji-installation|
+        3. Configuration ............................. |gitmoji-configuration|
+
+===============================================================================
+1. Introduction                                                   *gitmoji-intro*
+
+gitmoji.vim is a simple plugin to allow using gitmoji from within vim git
+commit messages. It provides an autocomplete function, optional iabbrev
+replacements, and additional aliasing for gitmoji names.
+
+Information regarding gitmoji can be found at https://gitmoji.dev
+
+===============================================================================
+2. Installation                                            *gitmoji-installation*
+
+Using your vim package manager of choice, simply add gitmoji.vim to your list
+of plugins. For example, if using vim-plug:
+>
+    Plug 'slurps-mad-rips/gitmoji.vim'
+<
+===============================================================================
+3. Configuration                                          *gitmoji-configuration*
+
+

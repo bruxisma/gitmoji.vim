@@ -1,0 +1,49 @@
+name: Update
+on:
+  schedule:
+    - cron: '0 12 * * 1'
+permissions:
+  repository-projects: read
+  pull-requests: write
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Get Gitmoji Release Information
+        id: release
+        run: |
+          output=$(gh release view --repo carloscuesta/gitmoji --json tagName,tarballUrl)
+          tarball=$(echo ${output} | jq -r .tarballUrl)
+          version=$(echo ${output} | jq -r .tagName)
+          echo "::set-output name=version::${version}"
+          echo "::set-output name=tarball::${tarball}"
+      - name: Update gitmojis.json
+        run: >-
+          curl -L ${{ steps.release.outputs.tarball }}
+          | tar --extract --gunzip --no-anchored
+          --transform='flags=r;s|src/data/gitmojis.json|gitmojis.json'
+          --directory=${{github.workspace}}/autoload
+          --strip-components=1
+          gitmojis.json
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          branch: github-actions/gitmoji.dev/gitmoji
+          delete-branch: true
+          commit-message: Bump gitmoji.json to ${{ steps.release.outputs.version }}
+          title: ⬆ Bump gitmoji.json to ${{ steps.release.outputs.version }}
+          body: |
+            Bumps [gitmoji](https://github.com/carloscuesta/gitmoji) to ${{steps.release.outputs.version}}
+
+            See the [release notes][1] for more information.
+
+            [1]: https://github.com/carloscuesta/gitmoji/releases/tag/${{steps.release.outputs.version}}
+
+          labels: dependencies,upstream
+          assignees: slurps-mad-rips
+          reviewers: slurps-mad-rips
