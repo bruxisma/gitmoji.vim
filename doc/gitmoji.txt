@@ -1,4 +1,4 @@
-*gitmoji.txt* Gitmoji Plugin
+*gitmoji.txt*           Use gitmoji inside of git commit messages!
 
 Homepage:       https://github.com/slurps-mad-rips/gitmoji.vim
 License:        MIT
@@ -6,14 +6,14 @@ Version:        0.1.0
 Author:         Isabella Muerte
 
 ===============================================================================
-Contents                                               *gitmoji* *gitmoji-contents*
+CONTENTS                                               *gitmoji* *gitmoji-contents*
 
         1. Introduction .............................. |gitmoji-introduction|
         2. Installation .............................. |gitmoji-installation|
         3. Configuration ............................. |gitmoji-configuration|
 
 ===============================================================================
-1. Introduction                                                   *gitmoji-intro*
+INTRODUCTION                                                      *gitmoji-intro*
 
 gitmoji.vim is a simple plugin to allow using gitmoji from within vim git
 commit messages. It provides an autocomplete function, optional iabbrev
@@ -21,15 +21,31 @@ replacements, and additional aliasing for gitmoji names.
 
 Information regarding gitmoji can be found at https://gitmoji.dev
 
+gitmoji.vim requires the |matchfuzzy()| function to be available.
+
 ===============================================================================
-2. Installation                                            *gitmoji-installation*
+INSTALLATION                                               *gitmoji-installation*
 
 Using your vim package manager of choice, simply add gitmoji.vim to your list
-of plugins. For example, if using vim-plug:
->
+of plugins. For example, if using vim-plug: >
     Plug 'slurps-mad-rips/gitmoji.vim'
 <
 ===============================================================================
-3. Configuration                                          *gitmoji-configuration*
+CONFIGURATION                                             *gitmoji-configuration*
 
+                                                         *g:gitmoji_insert_emoji*
+g:gitmoji_insert_emoji~
+	When set to `1` or `v:true`, the actual emoji will be inserted on
+	completion instead of the gitmoji text code. e.g., if selecting
+	`test-tube`, and `g:gitmoji_insert_emoji` is `v:true`, 🧪 will be
+	inserted, instead of the gitmoji code `:test_tube:`.
+	The default is `v:true`.
 
+                                                    *g:gitmoji_complete_anywhere*
+g:gitmoji_complete_anywhere~
+	When set to `1` or `v:true`, both the 'omnifunc' and 'completefunc' can
+	activate anywhere.
+	The default is `v:false`
+
+===============================================================================
+ vim:ft=help:tw=78

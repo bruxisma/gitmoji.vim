@@ -7,6 +7,9 @@ themselves, autocomplete, and aliases for *some* gitmoji.
 Each of these (with the exception of autocomplete) are configurable.
 Autocomplete is *always* enabled when the filetype is set to `gitcommit`.
 
+gitmoji.vim currently requires the `matchfuzzy()` vim function. This was added
+in September of 2020.
+
 # Installation
 
 gitmoji.vim uses the typical "module" package layout of a vim plugin. Simply
