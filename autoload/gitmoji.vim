@@ -25,7 +25,7 @@ endfunction
 " where kind: is set to *not* gitmoji, but 'user', or 'plugin'
 " TODO: Look into applying iabbrev(s) during the CompleteDonePre or
 " CompleteDone event.
-function s:create(idx, name)
+function s:builtin(idx, name)
   let gitmoji = s:gitmoji[a:name]
   echomsg "Gitmoji.code: " gitmoji.code
   let word = g:gitmoji_insert_emoji ? gitmoji.emoji : gitmoji.code
@@ -76,5 +76,5 @@ function gitmoji#complete(findstart, base)
   if !a:base->empty() && a:findstart == 0
     let keys = keys->matchfuzzy(a:base[1:])
   endif
-  return keys->map(function('s:create'))
+  return keys->map(function('s:builtin'))
 endfunction
