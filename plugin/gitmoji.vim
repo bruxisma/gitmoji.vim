@@ -8,3 +8,8 @@ endif
 if !exists('g:gitmoji_complete_anywhere')
   let g:gitmoji_complete_anywhere = v:false
 endif
+
+" TODO: This is not yet implemented
+if !exists('g:gitmoji_abbreviations')
+  let g:gitmoji_abbreviations = v:true
+endif

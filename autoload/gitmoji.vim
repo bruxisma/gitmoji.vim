@@ -62,10 +62,15 @@ function s:load()
   return result
 endfunction
 
-function gitmoji#complete(findstart, base)
+function gitmoji#builtins()
   if !exists('s:gitmoji')
     let s:gitmoji = s:load()
   endif
+  return s:gitmoji
+endfunction
+
+function gitmoji#complete(findstart, base)
+  call gitmoji#builtins()
   " TODO: Permit configuration setting to allow 'matching' if the line is
   " empty
   if a:base->empty() && a:findstart == 1
@@ -77,4 +82,8 @@ function gitmoji#complete(findstart, base)
     let keys = keys->matchfuzzy(a:base[1:])
   endif
   return keys->map(function('s:builtin'))
+endfunction
+
+" Registers aliases from a dictionary to be usable as gitmoji names.
+function gitmoji#register(aliases)
 endfunction

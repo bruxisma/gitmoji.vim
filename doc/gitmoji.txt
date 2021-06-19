@@ -35,17 +35,25 @@ CONFIGURATION                                             *gitmoji-configuration
 
                                                          *g:gitmoji_insert_emoji*
 g:gitmoji_insert_emoji~
-	When set to `1` or `v:true`, the actual emoji will be inserted on
+	When set to or |v:true|, the actual emoji will be inserted on
 	completion instead of the gitmoji text code. e.g., if selecting
-	`test-tube`, and `g:gitmoji_insert_emoji` is `v:true`, 🧪 will be
-	inserted, instead of the gitmoji code `:test_tube:`.
-	The default is `v:true`.
+	"test-tube", and |g:gitmoji_insert_emoji| is |v:true|, 🧪 will be
+	inserted, instead of the gitmoji code ":test_tube:".
+	The default is |v:true|.
 
                                                     *g:gitmoji_complete_anywhere*
 g:gitmoji_complete_anywhere~
-	When set to `1` or `v:true`, both the 'omnifunc' and 'completefunc' can
+	When set to |v:true|, both the 'omnifunc' and 'completefunc' can
 	activate anywhere.
-	The default is `v:false`
+	The default is |v:false|
+
+                                                        *g:gitmoji_abbreviations*
+g:gitmoji_abbreviations~
+	If set to |v:true| and |g:gitmoji_insert_emoji| is also set to
+	|v:true|, |:iabbrev| commands are injected that will also replace
+	gitmoji codes with their respective emoji. This works separately from
+	the 'omnifunc' or 'completefunc' that gitmoji sets.
+	The default is |v:true|
 
 ===============================================================================
  vim:ft=help:tw=78
