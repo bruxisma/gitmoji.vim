@@ -1,5 +1,5 @@
-"if exists('g:gitmoji') | finish | endif
-"let g:gitmoji = 1
+if exists('g:gitmoji_autoload_script') | finish | endif
+let g:gitmoji = 1
 
 let s:directory = expand('<sfile>:p')->resolve()->fnamemodify(':h')
 
@@ -23,14 +23,15 @@ endfunction
 " There needs to be a better way to handle this
 " TODO: We need to provide a separate way for users to define their aliases
 " where kind: is set to *not* gitmoji, but 'user', or 'plugin'
-" TODO: Configure whether we insert the gitmoji.emoji or the gitmoji.code
-" It might make more sense to do the actual swap/change inside the
-" CompleteDonePre or CompleteDone autocommand event
+" TODO: Look into applying iabbrev(s) during the CompleteDonePre or
+" CompleteDone event.
 function s:create(idx, name)
   let gitmoji = s:gitmoji[a:name]
+  echomsg "Gitmoji.code: " gitmoji.code
+  let word = g:gitmoji_insert_emoji ? gitmoji.emoji : gitmoji.code
   let result =<< trim EOT
     #{
-      word: gitmoji.emoji,
+      word: g:gitmoji_insert_emoji ? gitmoji.emoji : gitmoji.code,
       abbr: gitmoji.emoji .. ' ' .. gitmoji.name,
       menu: gitmoji.description,
       kind: 'gitmoji',
