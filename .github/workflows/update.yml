@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Authenticate GitHub CLI
+        run: gh auth login --with-token ${{github.token}}
       - name: Get Gitmoji Release Information
         id: release
         run: |
