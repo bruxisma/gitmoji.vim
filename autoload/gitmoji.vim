@@ -3,6 +3,12 @@ let g:gitmoji = 1
 
 let s:directory = expand('<sfile>:p')->resolve()->fnamemodify(':h')
 
+function s:warn(...)
+  echohl WarningMsg
+  echomsg "gitmoji.vim: " a:000->join()
+  echohl None
+endfunction
+
 function s:compare(lhs, rhs)
   if a:lhs.name == a:rhs.name
     return 0
@@ -20,35 +26,18 @@ function s:findlocal(filename)
   return findfile(a:filename, s:directory)
 endfunction
 
-" There needs to be a better way to handle this
-" TODO: We need to provide a separate way for users to define their aliases
-" where kind: is set to *not* gitmoji, but 'user', or 'plugin'
 " TODO: Look into applying iabbrev(s) during the CompleteDonePre or
 " CompleteDone event.
 function s:builtin(idx, name)
   let gitmoji = s:gitmoji[a:name]
-  echomsg "Gitmoji.code: " gitmoji.code
   let word = g:gitmoji_insert_emoji ? gitmoji.emoji : gitmoji.code
-  let result =<< trim EOT
-    #{
-      word: g:gitmoji_insert_emoji ? gitmoji.emoji : gitmoji.code,
-      abbr: gitmoji.emoji .. ' ' .. gitmoji.name,
-      menu: gitmoji.description,
-      kind: 'gitmoji',
-    }
-  EOT
-  return result->join()->eval()
+  let abbr = printf('%s %s', gitmoji.emoji, gitmoji.name)
+  let menu = gitmoji.description
+  let kind = 'builtin'
+  return #{ word: word, abbr: abbr, menu: menu, kind: kind }
 endfunction
 
-function s:warn(...)
-  echohl WarningMsg
-  echomsg "gitmoji.vim: " a:000->join()
-  echohl None
-endfunction
-
-" This will be configurable at some point for additional things, like custom
-" files
-function s:load()
+function s:builtins()
   let data = s:findlocal('gitmojis.json')->s:readjson()
   let result = {}
   if !has_key(data, 'gitmojis')
@@ -62,11 +51,38 @@ function s:load()
   return result
 endfunction
 
+function s:aliases()
+  if !exists('g:gitmoji_aliases')
+    return {}
+  endif
+  let type = type(g:gitmoji_aliases)
+  let data = {}
+  if type == v:t_string
+    let data = s:readjson(g:gitmoji_aliases)
+  elseif type == v:t_dict
+    let data = g:gitmoji_aliases
+  elseif type == v:t_func
+    let data = call g:gitmoji_aliases
+    if type(data) != v:t_dict
+      s:warn('gitmoji.vim', 'g:gitmoji_aliases function did not return a dictionary')
+      return {}
+    endif
+  endif
+  return data
+endfunction
+
 function gitmoji#builtins()
   if !exists('s:gitmoji')
-    let s:gitmoji = s:load()
+    let s:gitmoji = s:builtins()
   endif
   return s:gitmoji
+endfunction
+
+function gitmoji#aliases()
+  if !exists('s:aliases')
+    let s:aliases = s:aliases()
+  endif
+  return s:aliases
 endfunction
 
 function gitmoji#complete(findstart, base)
@@ -82,8 +98,4 @@ function gitmoji#complete(findstart, base)
     let keys = keys->matchfuzzy(a:base[1:])
   endif
   return keys->map(function('s:builtin'))
-endfunction
-
-" Registers aliases from a dictionary to be usable as gitmoji names.
-function gitmoji#register(aliases)
 endfunction

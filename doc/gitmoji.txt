@@ -8,9 +8,9 @@ Author:         Isabella Muerte
 ===============================================================================
 CONTENTS                                               *gitmoji* *gitmoji-contents*
 
-        1. Introduction .............................. |gitmoji-introduction|
-        2. Installation .............................. |gitmoji-installation|
-        3. Configuration ............................. |gitmoji-configuration|
+	1. Introduction .............................. |gitmoji-introduction|
+	2. Installation .............................. |gitmoji-installation|
+	3. Configuration ............................. |gitmoji-configuration|
 
 ===============================================================================
 INTRODUCTION                                                      *gitmoji-intro*
@@ -28,7 +28,7 @@ INSTALLATION                                               *gitmoji-installation
 
 Using your vim package manager of choice, simply add gitmoji.vim to your list
 of plugins. For example, if using vim-plug: >
-    Plug 'slurps-mad-rips/gitmoji.vim'
+	Plug 'slurps-mad-rips/gitmoji.vim'
 <
 ===============================================================================
 CONFIGURATION                                             *gitmoji-configuration*
@@ -45,6 +45,8 @@ g:gitmoji_insert_emoji~
 g:gitmoji_complete_anywhere~
 	When set to |v:true|, both the 'omnifunc' and 'completefunc' can
 	activate anywhere.
+	NOTE: This is not currently implemented in the most recent release of
+	gitmoji.vim
 	The default is |v:false|
 
                                                         *g:gitmoji_abbreviations*
@@ -54,6 +56,27 @@ g:gitmoji_abbreviations~
 	gitmoji codes with their respective emoji. This works separately from
 	the 'omnifunc' or 'completefunc' that gitmoji sets.
 	The default is |v:true|
+
+                                                              *g:gitmoji_aliases*
+g:gitmoji_aliases~
+	The gitmoji names mentioned on https://gitmoji.dev are not always easy
+	to remember for what they do exactly. For this reason, users can supply
+	a |g:gitmoji_aliases| variable. This variable can be either a
+	|String|, a |Dict|, or a |Funcref|.
+	If |g:gitmoji_aliases| is a |String|, it is read as a JSON file,
+	converted to a |Dict| and treated AS IF |g:gitmoji_aliases| is a
+	|Dict|.
+	If |g:gitmoji_aliases| is a |Funcref|, it MUST return a |Dict|, and
+	this returned value will be treated AS IF |g:gitmoji_aliases| was a
+	|Dict| the entire time.
+	If |g:gitmoji_aliases| is a |Dict|, each key MUST be the NAME (not the
+	emoji or code) of a gitmoji name. If it is not, it will be ignored and
+	a warning will be |:echo|ed to the |:messages| log. Each value of the
+	|Dict| MUST be a |List| of |Strings|.
+	Each alias is used to create an |:iabbrev| if both
+	|g:gitmoji_abbreviations| and |g:gitmoji_insert_emoji| are |v:true|.
+	NOTE: These aliases are not used in the complete function at this time,
+	but will be in the near future.
 
 ===============================================================================
  vim:ft=help:tw=78
