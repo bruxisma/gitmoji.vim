@@ -22,4 +22,6 @@ Plug 'slurps-mad-rips/gitmoji.vim'
 
 ## Configuration
 
-TODO
+Information regarding configuration settings for gitmoji.vim can be found in
+the [documentation](doc/gitmoji.txt). Alternatively, running `:help gitmoji` as
+an `Ex` command in vim will also provide all the necessary details.
