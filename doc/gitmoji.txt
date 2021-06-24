@@ -45,8 +45,6 @@ g:gitmoji_insert_emoji~
 g:gitmoji_complete_anywhere~
 	When set to |v:true|, both the 'omnifunc' and 'completefunc' can
 	activate anywhere.
-	NOTE: This is not currently implemented in the most recent release of
-	gitmoji.vim
 	The default is |v:false|
 
                                                         *g:gitmoji_abbreviations*
@@ -75,8 +73,6 @@ g:gitmoji_aliases~
 	|Dict| MUST be a |List| of |Strings|.
 	Each alias is used to create an |:iabbrev| if both
 	|g:gitmoji_abbreviations| and |g:gitmoji_insert_emoji| are |v:true|.
-	NOTE: These aliases are not used in the complete function at this time,
-	but will be in the near future.
 
 ===============================================================================
  vim:ft=help:tw=78
