@@ -1,5 +1,5 @@
 if exists('g:gitmoji_autoload_script') | finish | endif
-let g:gitmoji = 1
+let g:gitmoji_autoload_script = v:true
 
 let s:directory = expand('<sfile>:p')->resolve()->fnamemodify(':h')
 
