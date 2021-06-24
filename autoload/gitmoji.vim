@@ -10,12 +10,12 @@ function s:warn(...)
 endfunction
 
 function s:compare(lhs, rhs)
-  if a:lhs.name == a:rhs.name
-    return 0
-  elseif a:lhs.name < a:rhs.name
+  if a:lhs.kind < a:rhs.kind
     return -1
+  elseif a:lhs.kind > a:rhs.kind
+    return 1
   endif
-  return 1
+  return 0
 endfunction
 
 function s:readjson(filename)
@@ -29,29 +29,35 @@ endfunction
 " TODO: Look into applying iabbrev(s) during the CompleteDonePre or
 " CompleteDone event.
 function s:builtin(idx, name)
-  let gitmoji = s:gitmoji[a:name]
-  let word = g:gitmoji_insert_emoji ? gitmoji.emoji : gitmoji.code
-  let abbr = printf('%s %s', gitmoji.emoji, gitmoji.name)
-  let menu = gitmoji.description
-  let kind = 'builtin'
-  return #{ word: word, abbr: abbr, menu: menu, kind: kind }
+  return s:completion(s:builtins[a:name], 'builtin')
 endfunction
 
-function s:builtins()
+function s:alias(idx, name)
+  let gitmoji = s:aliases[a:name]
+  return s:completion(s:aliases[a:name], 'alias')
+endfunction
+
+function s:completion(gitmoji, type)
+  let word = g:gitmoji_insert_emoji ? a:gitmoji.emoji : a:gitmoji.code
+  let abbr = printf('%s %s', a:gitmoji.emoji, a:gitmoji.name)
+  let menu = a:gitmoji.description
+  return #{ word: word, abbr: abbr, menu: menu, kind: a:type }
+endfunction
+
+function s:getbuiltins()
   let data = s:findlocal('gitmojis.json')->s:readjson()
   let result = {}
   if !has_key(data, 'gitmojis')
-    s:warn('gitmojis.json', "is missing the 'gitmojis' key")
+    s:warn('gitmojis.json', "is missing the 'gitmojis' key.")
     return {}
   endif
-  let data.gitmojis = data.gitmojis->sort(function('s:compare'))
   for item in data.gitmojis
     let result[item.name] = item
   endfor
   return result
 endfunction
 
-function s:aliases()
+function s:getaliases()
   if !exists('g:gitmoji_aliases')
     return {}
   endif
@@ -64,38 +70,58 @@ function s:aliases()
   elseif type == v:t_func
     let data = call g:gitmoji_aliases
     if type(data) != v:t_dict
-      s:warn('gitmoji.vim', 'g:gitmoji_aliases function did not return a dictionary')
-      return {}
+      s:warn('gitmoji.vim', 'g:gitmoji_aliases function did not return a dictionary.')
+      let data = {}
     endif
   endif
-  return data
+  let builtins = gitmoji#builtins()
+  let results = {}
+  for [name, aliases] in data->items()
+    let gitmoji = builtins[name]->deepcopy()
+    for alias in aliases
+      let results[alias] = gitmoji->extend(#{ name: alias }, 'force')
+    endfor
+  endfor
+  return results
 endfunction
 
 function gitmoji#builtins()
-  if !exists('s:gitmoji')
-    let s:gitmoji = s:builtins()
+  if !exists('s:builtins')
+    let s:builtins = s:getbuiltins()
   endif
-  return s:gitmoji
+  return s:builtins
 endfunction
 
 function gitmoji#aliases()
   if !exists('s:aliases')
-    let s:aliases = s:aliases()
+    let s:aliases = s:getaliases()
   endif
   return s:aliases
 endfunction
 
 function gitmoji#complete(findstart, base)
+  " Ensure that the dictionaries have been loaded.
   call gitmoji#builtins()
-  " TODO: Permit configuration setting to allow 'matching' if the line is
-  " empty
+  call gitmoji#aliases()
   if a:base->empty() && a:findstart == 1
     let line = getline('.')[0:col('.') - 1]
-    return line->match(':[^: \t]*$')
+    let column = line->match(':[^: \t]*$')
+    if column < 0 && g:gitmoji_complete_anywhere
+      return col('.')
+    endif
+    return column
   endif
-  let keys = s:gitmoji->keys()->sort()
+  let builtins = s:builtins->keys()
+  let aliases = s:aliases->keys()
+  " In this case, there is 'a match' of sorts, and so we need to weed out the
+  " names. The issue is, we need to *then* also return both the builtins and
+  " the aliases defined. Thus our 'simple' code path will no longer work, and
+  " we must branch for when the a:base is... empty.
   if !a:base->empty() && a:findstart == 0
-    let keys = keys->matchfuzzy(a:base[1:])
+    let builtins = builtins->matchfuzzy(a:base[1:])
+    let aliases = aliases->matchfuzzy(a:base[1:])
   endif
-  return keys->map(function('s:builtin'))
+  let completions = builtins->map(function('s:builtin'))
+  let completions += aliases->map(function('s:alias'))
+  return completions->sort(function('s:compare'))
 endfunction
