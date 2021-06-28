@@ -13,7 +13,7 @@ CONTENTS                                               *gitmoji* *gitmoji-conten
 	3. Configuration ............................. |gitmoji-configuration|
 
 ===============================================================================
-INTRODUCTION                                                      *gitmoji-intro*
+INTRODUCTION                                               *gitmoji-introduction*
 
 gitmoji.vim is a simple plugin to allow using gitmoji from within vim git
 commit messages. It provides an autocomplete function, optional iabbrev
@@ -28,6 +28,7 @@ INSTALLATION                                               *gitmoji-installation
 
 Using your vim package manager of choice, simply add gitmoji.vim to your list
 of plugins. For example, if using vim-plug: >
+
 	Plug 'slurps-mad-rips/gitmoji.vim'
 <
 ===============================================================================
