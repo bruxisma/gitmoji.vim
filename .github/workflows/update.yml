@@ -1,5 +1,11 @@
 name: Update
 on:
+  pull_request:
+    paths:
+      - .github/workflows/update.yml
+  push:
+    paths:
+      - .github/workflows/update.yml
   schedule:
     - cron: '0 12 * * 1'
 permissions:
@@ -37,8 +43,8 @@ jobs:
           author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           branch: github-actions/gitmoji.dev/gitmoji
           delete-branch: true
-          commit-message: Bump gitmoji.json to ${{ steps.release.outputs.version }}
-          title: ⬆ Bump gitmoji.json to ${{ steps.release.outputs.version }}
+          commit-message: Bump gitmojis.json to ${{ steps.release.outputs.version }}
+          title: ⬆ Bump gitmojis.json to ${{ steps.release.outputs.version }}
           body: |
             Bumps [gitmoji](https://github.com/carloscuesta/gitmoji) to ${{steps.release.outputs.version}}
 
