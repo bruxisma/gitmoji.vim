@@ -1,13 +1,7 @@
 name: Update
 on:
-  pull_request:
-    paths:
-      - .github/workflows/update.yml
-  push:
-    paths:
-      - .github/workflows/update.yml
   schedule:
-    - cron: '0 12 * * 1'
+    - cron: '0 12 * * *'
 permissions:
   repository-projects: read
   pull-requests: write
