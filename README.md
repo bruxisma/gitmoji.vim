@@ -17,7 +17,7 @@ add it with your favorite plugin manager. For example, using
 [`vim-plug`](https://github.com/junegunn/vim-plug):
 
 ```vim
-Plug 'slurps-mad-rips/gitmoji.vim'
+Plug 'bruxisma/gitmoji.vim'
 ```
 
 ## Configuration
