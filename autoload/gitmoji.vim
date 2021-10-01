@@ -117,7 +117,7 @@ function gitmoji#complete(findstart, base)
   " names. The issue is, we need to *then* also return both the builtins and
   " the aliases defined. Thus our 'simple' code path will no longer work, and
   " we must branch for when the a:base is... empty.
-  if !a:base->empty() && a:findstart == 0
+  if !a:base->empty() && a:findstart == 0 && a:base != ":"
     let builtins = builtins->matchfuzzy(a:base[1:])
     let aliases = aliases->matchfuzzy(a:base[1:])
   endif
