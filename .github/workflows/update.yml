@@ -47,5 +47,5 @@ jobs:
             [1]: https://github.com/carloscuesta/gitmoji/releases/tag/${{steps.release.outputs.version}}
 
           labels: dependencies,upstream
-          assignees: slurps-mad-rips
-          reviewers: slurps-mad-rips
+          assignees: bruxisma
+          reviewers: bruxisma
