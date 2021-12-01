@@ -539,9 +539,17 @@
     {
       "emoji": "🧱",
       "entity": "&#x1f9f1;",
-      "code": ":brick:",
+      "code": ":bricks:",
       "description": "Infrastructure related changes.",
-      "name": "brick",
+      "name": "bricks",
+      "semver": null
+    },
+    {
+      "emoji": "🧑‍💻",
+      "entity": "&#129489;&#8205;&#128187;",
+      "code": ":technologist:",
+      "description": "Improve developer experience",
+      "name": "technologist",
       "semver": null
     }
   ]
