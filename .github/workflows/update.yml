@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Authenticate GitHub CLI
         run: echo ${{github.token}} | gh auth login --with-token
       - name: Get Gitmoji Release Information
@@ -20,18 +20,18 @@ jobs:
           output=$(gh release view --repo carloscuesta/gitmoji --json tagName,tarballUrl)
           tarball=$(echo ${output} | jq -r .tarballUrl)
           version=$(echo ${output} | jq -r .tagName)
-          echo "::set-output name=version::${version}"
-          echo "::set-output name=tarball::${tarball}"
+          echo "version=${version}" >> ${GITHUB_OUTPUT}
+          echo "tarball=${tarball}" >> ${GITHUB_OUTPUT}
       - name: Update gitmojis.json
         run: >-
           curl -L ${{ steps.release.outputs.tarball }}
           | tar --extract --gunzip --no-anchored
-          --transform='flags=r;s|src/data/gitmojis.json|gitmojis.json|'
+          --transform='flags=r;s|packages/gitmojis/src/gitmojis.json|gitmojis.json|'
           --directory=${{github.workspace}}/autoload
           --strip-components=1
           gitmojis.json
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v4
         with:
           committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
